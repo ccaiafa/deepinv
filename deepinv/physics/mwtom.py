@@ -7,7 +7,7 @@ from deepinv.physics.forward import Physics
 from mwtomography.dataloader.electric_field.electric_field_generator import ElectricFieldGenerator
 
 
-class MWTom(Physics):
+class MWTomography(Physics):
     r"""
     (MicroWave) Tomography nonlinear operator.
 
