@@ -4,6 +4,8 @@ from torch import nn
 import torch.nn.functional as F
 from deepinv.physics.forward import Physics
 
+from mwtomography.dataloader.electric_field.electric_field_generator import ElectricFieldGenerator
+
 
 class MWTomography(Physics):
     r"""
@@ -49,7 +51,6 @@ class MWTomography(Physics):
         super().__init__(**kwargs)
 
     def A(self, x):
+        
         return
 
-    def A_dagger(self, y):
-        return
