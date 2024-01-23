@@ -4,6 +4,7 @@ from torch import nn
 import torch.nn.functional as F
 from deepinv.physics.forward import LinearPhysics
 
+
 if torch.__version__ > "1.2.0":
     affine_grid = lambda theta, size: F.affine_grid(theta, size, align_corners=True)
     grid_sample = lambda input, grid, mode="bilinear": F.grid_sample(
@@ -319,3 +320,4 @@ class Tomography(LinearPhysics):
 
     def A_adjoint(self, y):
         return self.iradon(y, filtering=False)
+
