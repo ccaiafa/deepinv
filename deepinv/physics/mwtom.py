@@ -48,11 +48,9 @@ class MWTomography(Physics):
 
         super().__init__(**kwargs)
 
-        self.T = 1
-        self.noise_model =  2
 
     def A(self, x):
-        print()
+
         return
     
     def A_dagger(self, y):
