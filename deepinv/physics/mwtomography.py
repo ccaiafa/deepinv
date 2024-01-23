@@ -7,7 +7,7 @@ from deepinv.physics.forward import Physics
 from mwtomography.dataloader.electric_field.electric_field_generator import ElectricFieldGenerator
 
 
-class MWTomography(Physics):
+class MWTom(Physics):
     r"""
     (MicroWave) Tomography nonlinear operator.
 
@@ -44,11 +44,10 @@ class MWTomography(Physics):
         transmitter_radius=3,
         wave_type=0,
         shape="circle",
-        nshapes=3,
-        device=torch.device("cpu"),
-        **kwargs,
-    ):
+        nshapes=3, device=torch.device("cpu"), **kwargs,):
+
         super().__init__(**kwargs)
+
         self.T = 1
         self.noise_model =  2
 
