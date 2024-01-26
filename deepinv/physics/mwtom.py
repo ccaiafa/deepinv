@@ -126,13 +126,13 @@ class MWTstepB(Physics):
             receiver_radius=receiver_radius,
             transmitter_radius=transmitter_radius,
             wave_type=wave_type,
-            device=device)
+            device=device).to(device)
 
         image_domain = np.linspace(-max_diameter, max_diameter, img_width)
         self.x_domain, self.y_domain = np.meshgrid(image_domain, -image_domain)
-        self.GS = self.electric_field_generator.compute_GS(self.x_domain, self.y_domain)
+        self.GS = self.electric_field_generator.compute_GS(self.x_domain, self.y_domain).to(device)
         
-        self.stepBLinOp = stepBOp(self.GS, device)
+        self.stepBLinOp = stepBOp(self.GS, device).to(device)
 
     def A(self, x):
         return self.stepBLinOp._matvec(x, ET)
