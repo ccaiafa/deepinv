@@ -104,17 +104,17 @@ class MWTstepB(Physics):
     """
 
     def __init__(
-            self,
-            img_width,
-            wavelength,
-            no_of_receivers,
-            no_of_transmitters,
-            max_diameter=1,
-            receiver_radius=3,
-            transmitter_radius=3,
-            wave_type=0,
-            device=torch.device("cpu"),
-            **kwargs
+        self,
+        img_width,
+        wavelength,
+        no_of_receivers,
+        no_of_transmitters,
+        max_diameter=1,
+        receiver_radius=3,
+        transmitter_radius=3,
+        wave_type=0,
+        device=torch.device("cpu"),
+        **kwargs
     ):
         super().__init__(**kwargs)
         self.electric_field_generator = ElectricFieldGenerator(
