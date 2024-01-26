@@ -126,7 +126,7 @@ class MWTstepB(Physics):
             receiver_radius=receiver_radius,
             transmitter_radius=transmitter_radius,
             wave_type=wave_type,
-            device=device).to(device)
+            device=device)
 
         image_domain = np.linspace(-max_diameter, max_diameter, img_width)
         self.x_domain, self.y_domain = np.meshgrid(image_domain, -image_domain)
