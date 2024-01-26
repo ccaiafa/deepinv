@@ -130,9 +130,9 @@ class MWTstepB(Physics):
 
         image_domain = np.linspace(-max_diameter, max_diameter, img_width)
         self.x_domain, self.y_domain = np.meshgrid(image_domain, -image_domain)
-        self.GS = self.electric_field_generator.compute_GS(self.x_domain, self.y_domain).to(device)
+        self.GS = self.electric_field_generator.compute_GS(self.x_domain, self.y_domain)
         
-        self.stepBLinOp = stepBOp(self.GS, device).to(device)
+        self.stepBLinOp = stepBOp(self.GS, device)
 
     def A(self, x):
         return self.stepBLinOp._matvec(x, ET)
