@@ -57,8 +57,10 @@ class MWTomography(Physics):
 
 
 class stepBOp(LinearOperator):
-    def __init__(self, GS):
+    def __init__(self, GS, x_domain, y_domain):
         self.GS = GS
+        self.x_domain = x_domain
+        self.y_domain = y_domain
         super().__init__()
 
     def _matvec(self, x):
