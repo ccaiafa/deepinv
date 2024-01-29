@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from mwtomography.dataloader.image.image_generator import ImageGenerator
-from mwtomography.dataloader.image import Image
+from mwtomography.dataloader.image.image import Image
 
 try:
     import mwtomography
