@@ -57,21 +57,21 @@ class MWTomography(Physics):
 
 
 class stepBOp(LinearOperator):
-    def __init__(self, GS, x_domain, y_domain):
+    def __init__(self, EFgen, GS, x_domain, y_domain):
         self.GS = GS
         self.x_domain = x_domain
         self.y_domain = y_domain
         super().__init__()
 
     def _matvec(self, x):
-        _, ET = ElectricFieldGenerator.generate_total_electric_field(self, x, self.x_domain, self.y_domain, full_pixel=True)
+        _, ET = EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
         # forward linear operator
         aux = np.multiply(np.matrix(ET), np.matrix(x).T)
         y = np.array(np.matmul(-1j * self.GS, aux))
         return y.reshape(-1)
 
     def _rmatvec(self, y):
-        _, ET = ElectricFieldGenerator.generate_total_electric_field(self, x, self.x_domain, self.y_domain, full_pixel=True)
+        _, ET = EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
         # adjoint linear operator
         B = np.matmul(1j * self.GS.H, y.reshape(-1, self.Ninc))
         C = np.multiply(np.matrix(ET).H, B.T)
@@ -133,7 +133,7 @@ class MWTstepB(Physics):
         self.x_domain, self.y_domain = np.meshgrid(image_domain, -image_domain)
         self.GS = self.electric_field_generator.compute_GS(self.x_domain, self.y_domain)
 
-        self.stepBLinOp = stepBOp(self.GS, self.x_domain, self.y_domain)
+        self.stepBLinOp = stepBOp(self.electric_field_generator, self.GS, self.x_domain, self.y_domain)
 
     def A(self, x):
         return self.stepBLinOp._matvec(x)
