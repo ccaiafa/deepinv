@@ -27,7 +27,7 @@ def random_MWTphantom(image_generator, x_domain, y_domain, nshapes=3):
 
     image = Image()
     image.generate_relative_permittivities(x_domain, y_domain, shapes)
-    return image
+    return image.relative_permittivities
 
 
 class RandomMWTPhantomDataset(torch.utils.data.Dataset):
@@ -41,12 +41,28 @@ class RandomMWTPhantomDataset(torch.utils.data.Dataset):
     :param float length: Length of the dataset. Useful for iterating the data-loader for a certain nb of iterations.
     """
 
-    def __init__(self, image_generator, nshapes, transform=None, length=np.inf):
-        image_domain = np.linspace(-image_generator.max_diameter, image_generator.max_diameter, image_generator.no_of_pixels)
+    def __init__(self,
+        size=128,
+        shape='circle',
+        nshapes=3,
+        max_diameter=1.0,
+        min_radius=0.15,
+        max_radius=0.4,
+        n_data=1,
+        transform=None,
+        length=np.inf):
+
+        image_domain = np.linspace(-max_diameter, max_diameter, size)
         self.x_domain, self.y_domain = np.meshgrid(image_domain, -image_domain)
         self.transform = transform
-        self.n_data = image_generator.no_of_images
+        self.n_data = n_data
         self.length = length
+        self.shape = shape
+        self.nshapes = nshapes
+        self.min_radius = min_radius
+        self.max_radius = max_radius
+        self.image_generator = ImageGenerator(no_of_images=1, shape=shape, max_diameter=max_diameter, no_of_pixels=size)
+
 
     def __len__(self):
         return self.length
@@ -55,7 +71,7 @@ class RandomMWTPhantomDataset(torch.utils.data.Dataset):
         """
         :return tuple : A tuple (phantom, 0) where phantom is a torch tensor of shape (n_data, size, size).
         """
-        phantom_np = np.array([random_phantom(self.space) for i in range(self.n_data)])
+        phantom_np = np.array([random_MWTphantom(self.image_generator, self.x_domain, self.y_domain, self.nshapes) for i in range(self.n_data)])
         phantom = torch.from_numpy(phantom_np).float()
         if self.transform is not None:
             phantom = self.transform(phantom)
