@@ -65,14 +65,14 @@ class stepBOp(LinearOperator):
         super().__init__()
 
     def _matvec(self, x):
-        _, ET = EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
+        _, ET = self.EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
         # forward linear operator
         aux = np.multiply(np.matrix(ET), np.matrix(x).T)
         y = np.array(np.matmul(-1j * self.GS, aux))
         return y.reshape(-1)
 
     def _rmatvec(self, y):
-        _, ET = EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
+        _, ET = self.EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
         # adjoint linear operator
         B = np.matmul(1j * self.GS.H, y.reshape(-1, self.Ninc))
         C = np.multiply(np.matrix(ET).H, B.T)
