@@ -6,7 +6,7 @@ from deepinv.physics.forward import Physics
 from pylops import LinearOperator
 
 from mwtomography.dataloader.electric_field.electric_field_generator import ElectricFieldGenerator
-from mwtomography.dataloader.electric_field.electric_field_generator import generate_total_electric_fielf
+from mwtomography.dataloader.electric_field.electric_field_generator import generate_total_electric_field
 
 
 class MWTomography(Physics):
