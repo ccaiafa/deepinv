@@ -6,7 +6,6 @@ from deepinv.physics.forward import Physics
 from pylops import LinearOperator
 
 from mwtomography.dataloader.electric_field.electric_field_generator import ElectricFieldGenerator
-from mwtomography.dataloader.electric_field.electric_field_generator import generate_total_electric_field
 
 
 class MWTomography(Physics):
@@ -63,14 +62,14 @@ class stepBOp(LinearOperator):
         super().__init__()
 
     def _matvec(self, x):
-        _, ET = generate_total_electric_field(self, x, self.x_domain, self.y_domain, full_pixel=True)
+        _, ET = ElectricFieldGenerator.generate_total_electric_field(self, x, self.x_domain, self.y_domain, full_pixel=True)
         # forward linear operator
         aux = np.multiply(np.matrix(ET), np.matrix(x).T)
         y = np.array(np.matmul(-1j * self.GS, aux))
         return y.reshape(-1)
 
     def _rmatvec(self, y):
-        _, ET = generate_total_electric_field(self, x, self.x_domain, self.y_domain, full_pixel=True)
+        _, ET = ElectricFieldGenerator.generate_total_electric_field(self, x, self.x_domain, self.y_domain, full_pixel=True)
         # adjoint linear operator
         B = np.matmul(1j * self.GS.H, y.reshape(-1, self.Ninc))
         C = np.multiply(np.matrix(ET).H, B.T)
