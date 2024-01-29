@@ -72,8 +72,11 @@ class RandomMWTPhantomDataset(torch.utils.data.Dataset):
         """
         :return tuple : A tuple (phantom, 0) where phantom is a torch tensor of shape (n_data, size, size).
         """
-        phantom_np = np.array([random_MWTphantom(self.image_generator, self.x_domain, self.y_domain, self.nshapes) for i in range(self.n_data)])
-        phantom = torch.from_numpy(phantom_np).float()
+        #phantom_np = np.array([random_MWTphantom(self.image_generator, self.x_domain, self.y_domain, self.nshapes) for i in range(self.n_data)])
+        #phantom = torch.from_numpy(phantom_np).float()
+        phantom = np.array(
+            [random_MWTphantom(self.image_generator, self.x_domain, self.y_domain, self.nshapes) for i in
+             range(self.n_data)])
         if self.transform is not None:
             phantom = self.transform(phantom)
         return phantom, 0
