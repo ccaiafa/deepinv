@@ -109,6 +109,7 @@ class MWTstepB(Physics):
 
     def __init__(
             self,
+            x0,
             img_width,
             wavelength,
             no_of_receivers,
@@ -117,7 +118,6 @@ class MWTstepB(Physics):
             receiver_radius=3,
             transmitter_radius=3,
             wave_type=0,
-            x0,
             device=torch.device("cpu"),
             **kwargs
     ):
