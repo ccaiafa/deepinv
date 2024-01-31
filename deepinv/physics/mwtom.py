@@ -57,28 +57,27 @@ class MWTomography(Physics):
 
 
 class stepBOp(LinearOperator):
-    def __init__(self, EFgen, GS, x_domain, y_domain):
+    def __init__(self, EFgen, x0, GS, x_domain, y_domain):
         self.EFgen = EFgen
         self.GS = GS
         self.x_domain = x_domain
         self.y_domain = y_domain
+        _, self.ET = self.EFgen.generate_total_electric_field(x0, self.x_domain, self.y_domain, full_pixel=True)
         super().__init__()
 
     def _matvec(self, x):
-        _, ET = self.EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
         # forward linear operator
         b = x.squeeze()
         b = torch.flatten(torch.transpose(b, -2, -1), -2)
         b = b.unsqueeze(-1)
-        aux = torch.mul(ET, b)
+        aux = torch.mul(self.ET, b)
         y = torch.matmul(-1j * self.GS, aux)
         return y.reshape(-1)
 
     def _rmatvec(self, y):
-        _, ET = self.EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
         # adjoint linear operator
         B = np.matmul(1j * self.GS.H, y.reshape(-1, self.Ninc))
-        C = np.multiply(np.matrix(ET).H, B.T)
+        C = np.multiply(np.matrix(self.ET).H, B.T)
         C = np.sum(C, axis=0)
         C = np.matrix(C).T
         return C.reshape(-1)
@@ -118,6 +117,7 @@ class MWTstepB(Physics):
             receiver_radius=3,
             transmitter_radius=3,
             wave_type=0,
+            x0,
             device=torch.device("cpu"),
             **kwargs
     ):
@@ -136,8 +136,9 @@ class MWTstepB(Physics):
         image_domain = np.linspace(-max_diameter, max_diameter, img_width)
         self.x_domain, self.y_domain = np.meshgrid(image_domain, -image_domain)
         self.GS = self.electric_field_generator.compute_GS(self.x_domain, self.y_domain)
+        self.x0 = x0
 
-        self.stepBLinOp = stepBOp(self.electric_field_generator, self.GS, self.x_domain, self.y_domain)
+        self.stepBLinOp = stepBOp(self.x0, self.electric_field_generator, self.GS, self.x_domain, self.y_domain)
 
     def A(self, x):
         return self.stepBLinOp._matvec(x)
