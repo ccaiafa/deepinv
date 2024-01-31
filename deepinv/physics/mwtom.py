@@ -67,8 +67,11 @@ class stepBOp(LinearOperator):
     def _matvec(self, x):
         _, ET = self.EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
         # forward linear operator
-        aux = np.multiply(np.matrix(ET), np.matrix(x).T)
-        y = np.array(np.matmul(-1j * self.GS, aux))
+        b = x.squeeze()
+        b = torch.flatten(torch.transpose(b, -2, -1), -2)
+        b = b.unsqueeze(-1)
+        aux = torch.mul(ET, b)
+        y = torch.matmul(-1j * self.GS, aux)
         return y.reshape(-1)
 
     def _rmatvec(self, y):
