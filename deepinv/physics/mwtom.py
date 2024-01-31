@@ -57,16 +57,16 @@ class MWTomography(Physics):
 
 
 class stepBOp(LinearOperator):
-    def __init__(self, x0, EFgen, GS, x_domain, y_domain):
+    def __init__(self, EFgen, GS, x_domain, y_domain):
         self.EFgen = EFgen
         self.GS = GS
         self.x_domain = x_domain
         self.y_domain = y_domain
-        _, self.ET = self.EFgen.generate_total_electric_field(x0, self.x_domain, self.y_domain, full_pixel=True)
         super().__init__()
 
     def _matvec(self, x):
         # forward linear operator
+        _, self.ET = self.EFgen.generate_total_electric_field(x, self.x_domain, self.y_domain, full_pixel=True)
         b = x.squeeze()
         b = torch.flatten(torch.transpose(b, -2, -1), -2)
         b = b.unsqueeze(-1)
@@ -109,7 +109,6 @@ class MWTstepB(Physics):
 
     def __init__(
             self,
-            x0,
             img_width,
             wavelength,
             no_of_receivers,
@@ -136,9 +135,8 @@ class MWTstepB(Physics):
         image_domain = np.linspace(-max_diameter, max_diameter, img_width)
         self.x_domain, self.y_domain = np.meshgrid(image_domain, -image_domain)
         self.GS = self.electric_field_generator.compute_GS(self.x_domain, self.y_domain)
-        self.x0 = x0
 
-        self.stepBLinOp = stepBOp(self.x0, self.electric_field_generator, self.GS, self.x_domain, self.y_domain)
+        self.stepBLinOp = stepBOp(self.electric_field_generator, self.GS, self.x_domain, self.y_domain)
 
     def A(self, x):
         return self.stepBLinOp._matvec(x)
