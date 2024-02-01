@@ -79,5 +79,4 @@ class RandomMWTPhantomDataset(torch.utils.data.Dataset):
              range(self.n_data)])
         if self.transform is not None:
             phantom = self.transform(phantom)
-        return [phantom, phantom], 0
-        #return phantom, 0
+        return phantom, 0
