@@ -133,7 +133,7 @@ class MWTstepB(Physics):
         self.x_domain, self.y_domain = np.meshgrid(image_domain, -image_domain)
         self.GS = self.electric_field_generator.compute_GS(self.x_domain, self.y_domain)
         self.ET = None
-        self.stepBLinOp = stepBOp(self.ET, self.GS, self.x_domain, self.y_domain)
+        self.stepBLinOp = stepBOp(self.GS, self.x_domain, self.y_domain)
 
     def A(self, x):
         return self.stepBLinOp._matvec(self.ET, x)
