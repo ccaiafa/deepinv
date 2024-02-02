@@ -70,14 +70,15 @@ class stepBOp(LinearOperator):
         b = b.unsqueeze(-1)
         aux = torch.mul(ET, b)
         y = torch.matmul(-1j * self.GS, aux)
-        return y
+        return torch.cat((y.real.unsqueeze(0), y.imag.unsqueeze(0)), 0)
 
     def _rmatvec(self, ET, y):
         # adjoint linear operator
+        y = y[0, :, :] + 1j * y[1, :, :]
         B = torch.matmul(1j * self.GS.H, y)
         C = torch.mul(ET.conj(), B)
         C = torch.sum(C, axis=1)
-        return C.reshape(self.x_domain.shape[0],-1)
+        return torch.real(C.reshape(self.x_domain.shape[0], -1))
 
 
 class MWTstepB(Physics):
