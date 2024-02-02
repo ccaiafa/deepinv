@@ -66,7 +66,8 @@ class stepBOp(LinearOperator):
     def _matvec(self, ET, x):
         # forward linear operator
         b = x.squeeze()
-        b = torch.flatten(torch.transpose(b, -2, -1), -2)
+        b = torch.transpose(b, -2, -1)
+        b = torch.flatten(b, -2)
         b = b.unsqueeze(-1)
         aux = torch.mul(ET, b)
         y = torch.matmul(-1j * self.GS, aux)
