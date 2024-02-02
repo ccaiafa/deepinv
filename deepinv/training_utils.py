@@ -204,6 +204,8 @@ def train(
                     )  # In this case the dataloader outputs also a class label
                     x = x.to(device)
                     physics_cur = physics[g]
+                    if hasattr(physics_cur, 'ET'):
+                        physics_cur.Compute_ET(x)
 
                     if isinstance(physics_cur, torch.nn.DataParallel):
                         physics_cur.module.noise_model.__init__()
@@ -224,6 +226,8 @@ def train(
                             x = x.to(device)
 
                     physics_cur = physics[g]
+                    if hasattr(physics_cur, 'ET'):
+                        physics_cur.Compute_ET(x)
 
                 y = y.to(device)
 
@@ -429,6 +433,8 @@ def test(
                     ) = batch  # In this case the dataloader outputs also a class label
                     x = x.to(device)
                     physics_cur = physics[g]
+                    if hasattr(physics_cur, 'ET'):
+                        physics_cur.Compute_ET(x)
                     if isinstance(physics_cur, torch.nn.DataParallel):
                         physics_cur.module.noise_model.__init__()
                     else:
@@ -441,6 +447,8 @@ def test(
                     else:
                         x = x.to(device)
                     physics_cur = physics[g]
+                    if hasattr(physics_cur, 'ET'):
+                        physics_cur.Compute_ET(x)
 
                     y = y.to(device)
 
