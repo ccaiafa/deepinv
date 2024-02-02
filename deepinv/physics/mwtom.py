@@ -76,11 +76,10 @@ class stepBOp(LinearOperator):
 
     def _rmatvec(self, y):
         # adjoint linear operator
-        B = np.matmul(1j * self.GS.H, y.reshape(-1, self.Ninc))
-        C = np.multiply(np.matrix(self.ET).H, B.T)
-        C = np.sum(C, axis=0)
-        C = np.matrix(C).T
-        return C.reshape(-1)
+        B = torch.matmul(1j * self.GS.H, y.reshape(self.GS.shape[0], -1))
+        C = torch.mul(self.ET.conj(), B)
+        C = torch.sum(C, axis=1)
+        return C
 
 
 class MWTstepB(Physics):
