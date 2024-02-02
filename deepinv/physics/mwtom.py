@@ -75,7 +75,7 @@ class stepBOp(LinearOperator):
     def _rmatvec(self, ET, y):
         # adjoint linear operator
         Nrec = self.GS.shape[0]
-        y = y[0:Nrec/2, :] + 1j * y[Nrec/2:, :]
+        y = y[:Nrec, :] + 1j * y[Nrec:, :]
         B = torch.matmul(1j * self.GS.H, y)
         C = torch.mul(ET.conj(), B)
         C = torch.sum(C, axis=1)
